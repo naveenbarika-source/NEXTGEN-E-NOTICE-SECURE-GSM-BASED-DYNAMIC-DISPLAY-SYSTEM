@@ -1,4 +1,4 @@
-# NextGen E-Notice: Secure GSM Based Dynamic Display System
+🚀# NextGen E-Notice: Secure GSM Based Dynamic Display System
 
 A secure, SMS-controlled electronic notice board built on the **LPC2148 ARM7 microcontroller**. Authorized users can remotely update a scrolling dot-matrix LED display by sending formatted SMS messages through a GSM module — with built-in security to block unauthorized access.
 
