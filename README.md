@@ -1,6 +1,9 @@
-# NextGen E-Notice: Secure GSM Based Dynamic Display System
+# NextGen E-Notice: Secure GSM-Based Dynamic Display System
 
-A secure, SMS-controlled electronic notice board built on the **LPC2148 ARM7 microcontroller**. Authorized users can remotely update a scrolling dot-matrix LED display by sending formatted SMS messages through a GSM module — with built-in security to block unauthorized access.
+> Remotely update a scrolling LED notice board via SMS — with built-in security to block unauthorized access.
+
+![Hardware Setup](https://github.com/user-attachments/assets/154d6e13-3a6d-4ffd-b721-737485679399)
+
 
 ---
 
@@ -12,7 +15,6 @@ A secure, SMS-controlled electronic notice board built on the **LPC2148 ARM7 mic
 - [Hardware Requirements](#hardware-requirements)
 - [Software Requirements](#software-requirements)
 - [Hardware Connections](#hardware-connections)
-- [Project Structure](#project-structure)
 - [SMS Command Format](#sms-command-format)
 - [How It Works](#how-it-works)
 - [Security Mechanism](#security-mechanism)
@@ -24,19 +26,25 @@ A secure, SMS-controlled electronic notice board built on the **LPC2148 ARM7 mic
 
 ## Overview
 
-The **NextGen E-Notice Board** is an embedded system project that allows an authorized administrator to update a public LED notice board remotely via SMS. It uses the LPC2148 microcontroller at its core, communicates with a GSM module (M660A) over UART, stores persistent data in an I2C EEPROM (AT24C256), and drives four 8×8 dot matrix displays through 74HC164 SIPO shift registers.
+The **NextGen E-Notice Board** is an embedded systems project that enables an authorized administrator to update a public LED notice board remotely via SMS. Built on the **LPC2148 ARM7 microcontroller**, the system communicates with a **GSM module (M660A)** over UART, stores persistent data in an **I2C EEPROM (AT24C256)**, and drives four **8×8 dot-matrix displays** through **74HC164 SIPO shift registers**.
+
+
+https://github.com/user-attachments/assets/8396eb50-d34f-4899-9fc5-bb18ba9ba1bf
+
 
 ---
 
 ## Features
 
-- 📱 **Remote SMS-based message updates** — update the display from anywhere
-- 🔐 **Security code authentication** — only messages with the correct 4-digit security key are processed
-- 📲 **Authorized number verification** — only a pre-registered phone number can issue commands
-- 💾 **Non-volatile EEPROM storage** — messages and authorized numbers survive power cycles
-- 🚨 **Unauthorized access alerts** — the system sends an SMS alert when someone unauthorized tries to send a command
-- 📜 **Scrolling display** — long messages scroll smoothly across four dot-matrix panels
-- 🔄 **Dynamic number update** — the authorized phone number itself can be changed via SMS
+| Feature | Description |
+|---|---|
+| 📱 Remote SMS Updates | Update the display message from anywhere via SMS |
+| 🔐 Security Code Authentication | Only messages with the correct 4-digit security key are processed |
+| 📲 Authorized Number Verification | Only a pre-registered phone number can issue commands |
+| 💾 Non-Volatile EEPROM Storage | Messages and authorized numbers survive power cycles |
+| 🚨 Unauthorized Access Alerts | System sends an SMS alert when an unauthorized number attempts to send a command |
+| 📜 Scrolling Display | Long messages scroll smoothly across four dot-matrix panels |
+| 🔄 Dynamic Number Update | The authorized phone number can be changed remotely via SMS |
 
 ---
 
@@ -70,6 +78,9 @@ The **NextGen E-Notice Board** is an embedded system project that allows an auth
                                └─────────────────────┘
 ```
 
+<img width="812" height="629" alt="image" src="https://github.com/user-attachments/assets/0a3b40fc-b5c5-47fe-91ae-06125c9574f0" />
+
+
 ---
 
 ## Hardware Requirements
@@ -79,7 +90,7 @@ The **NextGen E-Notice Board** is an embedded system project that allows an auth
 | LPC2148 | 1 | ARM7TDMI-S microcontroller |
 | 8×8 Dot Matrix Display | 4 | LED dot matrix panels |
 | 74HC164 | 4 | 8-bit Serial-In Parallel-Out shift register |
-| 74HC573 | 1 | Octal D-type transparent latch (for row control) |
+| 74HC573 | 1 | Octal D-type transparent latch (row control) |
 | AT24C256 | 1 | 256Kb I2C EEPROM |
 | M660A GSM Module | 1 | GSM modem for SMS communication |
 | MAX232 | 1 | RS-232 level shifter (optional, for PC debugging) |
@@ -98,8 +109,6 @@ The **NextGen E-Notice Board** is an embedded system project that allows an auth
 ## Hardware Connections
 
 ### Dot Matrix — Column Control (74HC164 Shift Registers)
-
-Each shift register drives the 8 columns of one dot-matrix panel.
 
 | Shift Register | DSA (Serial In) | CP (Clock) | Drives |
 |---|---|---|---|
@@ -128,7 +137,7 @@ Each shift register drives the 8 columns of one dot-matrix panel.
 | P0.2 | SCL |
 | P0.3 | SDA |
 
-> **Note:** I2C and 74HC573 both use P0.2 and P0.3 — verify board configuration before use.
+> ⚠️ **Note:** I2C and 74HC573 share P0.2 and P0.3 — verify your board configuration before use.
 
 ### UART0 (GSM Module)
 
@@ -137,26 +146,6 @@ Each shift register drives the 8 columns of one dot-matrix panel.
 | P0.0 (TXD0) | Transmit to GSM |
 | P0.1 (RXD0) | Receive from GSM |
 
----
-
-## Project Structure
-
-```
-├── main4.c                  # Main application — system init, SMS handling loop
-├── uart.c / uart.h          # UART0 driver with interrupt-based receive
-├── uart_def.h               # UART configuration macros (baud rate, pins)
-├── uart0.h                  # Alternate UART0 prototype declarations
-├── gsm.c / gsm.h            # GSM module AT command interface
-├── security.c / security.h  # SMS format verification & content extraction
-├── i2c.c / i2c.h            # I2C master driver
-├── i2c_eeprom.c / i2c_eeprom.h      # EEPROM read/write functions
-├── i2c_eeprom_defines.h     # EEPROM slave addresses & memory map
-├── dotmatrix.c / dotmatrix.h        # Display scrolling logic
-├── sipo_74hc164.c / sipo_74hc164.h  # Shift register serial data driver
-├── dot_mat_def.h            # 5×8 character font bitmap array (96 ASCII chars)
-├── defines.h                # Bit-manipulation macros (SETBIT, WRITEBIT, etc.)
-└── types.h                  # Embedded type aliases (u8, u16, u32, s8, etc.)
-```
 
 ---
 
@@ -177,8 +166,6 @@ Each shift register drives the 8 columns of one dot-matrix panel.
 
 **Example:** `1404DHELLO WORLD$` → Displays `HELLO WORLD` on the notice board.
 
----
-
 ### 2. Update Authorized Mobile Number
 
 ```
@@ -189,24 +176,24 @@ Each shift register drives the 8 columns of one dot-matrix panel.
 
 ---
 
-Sends the currently stored EEPROM message back to the authorized number via SMS.
-
----
-
 ## How It Works
 
 1. **Power ON** — All peripherals initialize (UART, I2C, GSM, dot-matrix).
-2. **EEPROM Check** — Previously stored message and authorized number are loaded from EEPROM.
+2. **EEPROM Check** — The previously stored message and authorized number are loaded from EEPROM.
 3. **Display Loop** — The stored message scrolls continuously on the dot-matrix display.
 4. **SMS Interrupt** — When the GSM module detects an incoming SMS, a `+CMTI` notification triggers the `sms_flag` via the UART0 ISR.
-5. **Read & Verify** — The SMS is read using `AT+CMGR=1`. The sender number and message format are validated by `verify_format()`.
+5. **Read & Verify** — The SMS is read using `AT+CMGR=1`. The sender's number and message format are validated by `verify_format()`.
 6. **Process Command:**
    - ✅ Valid display command → extract message → update EEPROM → update display
    - ✅ Valid number-change command → extract new number → update EEPROM
-   - ⚠️ Authorized sender, wrong format → send format-error SMS back to sender
+   - ⚠️ Authorized sender with wrong format → send format-error SMS back to sender
    - ❌ Unauthorized sender → send alert SMS to the authorized number with the intruder's number
 7. **Delete SMS** — The processed SMS is deleted from GSM memory (`AT+CMGD=1`).
-8. **Return to Loop** — System resumes scrolling with the (possibly updated) message.
+8. **Return to Loop** — The system resumes scrolling with the (possibly updated) message.
+
+<!-- 🎥 INSERT VIDEO HERE: A short demo video showing the full flow — send SMS → display updates on board -->
+<!-- Upload to YouTube or GitHub Releases, then embed like this: -->
+<!-- [![Watch Demo](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID) -->
 
 ---
 
@@ -215,11 +202,24 @@ Sends the currently stored EEPROM message back to the authorized number via SMS.
 | Scenario | System Response |
 |---|---|
 | Correct security code + correct format + authorized number | ✅ Command executed |
-| Correct number + wrong format or security code | ⚠️ Error SMS sent to authorized number |
+| Correct authorized number + wrong format or security code | ⚠️ Format-error SMS sent to authorized number |
 | Unauthorized number (any format) | 🚨 Alert SMS with intruder's number sent to authorized number |
-| No `$` terminator | ❌ Message rejected |
+| Missing `$` terminator | ❌ Message rejected |
 
-The authorized phone number is stored in EEPROM and survives reboots. It can only be changed by the currently authorized number using the `1404M` command.
+### Unauthorized Access Example
+
+When an SMS is received from an unregistered number, the system rejects the request and immediately sends an alert to the authorized number, including the intruder's phone number for identification.
+
+![unauthorized number](https://github.com/user-attachments/assets/de9a72bb-8566-4992-8498-f3a89e53770a)
+
+
+### Invalid Format Example
+
+When the authorized number sends a message with an incorrect format, the system responds with a helpful correction showing the proper format to use.
+
+![Invalid Format](https://github.com/user-attachments/assets/0dbfbd24-e1a2-467e-a807-871fb47cf71e)
+
+> **The authorized phone number is stored in EEPROM and survives reboots.** It can only be changed by the currently authorized number using the `1404M` command.
 
 ---
 
@@ -231,6 +231,27 @@ The authorized phone number is stored in EEPROM and survives reboots. It can onl
 | `0x01` (`EE_MOB`) | Authorized mobile number (up to 10 digits) |
 | `0x14` (`EE_MSGI`) | Indicator byte for stored message (`'7'` = valid) |
 | `0x15` (`EE_MSG`) | Display message string |
+
+---
+
+## Project Structure
+
+```
+├── main4.c                          # Main application — system init, SMS handling loop
+├── uart.c / uart.h                  # UART0 driver with interrupt-based receive
+├── uart_def.h                       # UART configuration macros (baud rate, pins)
+├── uart0.h                          # Alternate UART0 prototype declarations
+├── gsm.c / gsm.h                    # GSM module AT command interface
+├── security.c / security.h          # SMS format verification & content extraction
+├── i2c.c / i2c.h                    # I2C master driver
+├── i2c_eeprom.c / i2c_eeprom.h      # EEPROM read/write functions
+├── i2c_eeprom_defines.h             # EEPROM slave addresses & memory map
+├── dotmatrix.c / dotmatrix.h        # Display scrolling logic
+├── sipo_74hc164.c / sipo_74hc164.h  # Shift register serial data driver
+├── dot_mat_def.h                    # 5×8 character font bitmap array (96 ASCII chars)
+├── defines.h                        # Bit-manipulation macros (SETBIT, WRITEBIT, etc.)
+└── types.h                          # Embedded type aliases (u8, u16, u32, s8, etc.)
+```
 
 ---
 
@@ -256,23 +277,26 @@ In `main4.c`, set your default authorized number:
 u8 auth_number[] = "9999999999";  // Replace with your number
 ```
 
-This can later be updated remotely via SMS.
+> This can also be updated remotely via SMS after flashing.
 
 ### 4. Build and Flash
 
 - Compile with Keil (zero errors expected)
 - Flash the `.hex` output to LPC2148 using **Flash Magic** over the USB-UART converter
 
-### 5. Test GSM Module (via HyperTerminal or Serial Monitor)
+
+### 5. Test the GSM Module
+
+Use HyperTerminal or any Serial Monitor:
 
 ```
-AT              → Check communication (expect: OK)
-ATE0            → Disable echo
-AT+CMGF=1       → Set SMS text mode
-AT+CNMI=2,1,0,0,0 → Enable new SMS notifications
-AT+CMGR=1       → Read SMS at slot 1
-AT+CMGD=1       → Delete SMS at slot 1
-AT+CMGS="<num>" → Send SMS (enter message, end with Ctrl+Z)
+AT                        → Check communication (expect: OK)
+ATE0                      → Disable echo
+AT+CMGF=1                 → Set SMS text mode
+AT+CNMI=2,1,0,0,0         → Enable new SMS notifications
+AT+CMGR=1                 → Read SMS at slot 1
+AT+CMGD=1                 → Delete SMS at slot 1
+AT+CMGS="<num>"           → Send SMS (enter message, end with Ctrl+Z)
 ```
 
 ---
@@ -290,22 +314,41 @@ AT+CMGS="<num>" → Send SMS (enter message, end with Ctrl+Z)
 | `AT+CMGS="<number>"` | Send SMS to the specified number |
 
 ---
-👨‍💻 Author
-```
-Barika Naveen
+
+## Side-by-side Of Phone Sending SMS And The Dot Matrix Displaying The Result:
+
+<!-- 🎥 INSERT VIDEO HERE: Full demo video showing:
+     1. Sending a valid SMS → message appears on dot matrix
+     2. Sending from unauthorized number → alert SMS received
+     3. Sending wrong format → format-error SMS received
+     Upload to YouTube and embed using the format below: -->
+
+<!-- [![Project Demo](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID) -->
+
+https://github.com/user-attachments/assets/3bde4ab9-1600-43d7-8d11-a8ed610d4d2f
+
+
+---
+
+## Author
+
+**Barika Naveen**
 🎓 EEE Student | Embedded Systems Enthusiast
 💡 Interested in ARM, Embedded C & IoT
-```
+
+---
 
 ## License
 
-This project is developed for educational purposes. Feel free to use and modify it for your own embedded systems learning.
+This project was developed for educational purposes. Feel free to use and modify it for your own embedded systems learning.
 
 ---
+
 ## ⭐ Support
-If you like this project:
-- ⭐ Star this repository  
-- 🍴 Fork it  
-- 🛠️ Contribute improvements  
+
+If you find this project helpful:
+- ⭐ Star this repository
+- 🍴 Fork it
+- 🛠️ Contribute improvements
 
 Happy Coding! 🚀
