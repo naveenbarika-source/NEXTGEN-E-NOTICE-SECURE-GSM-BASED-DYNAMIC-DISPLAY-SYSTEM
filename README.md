@@ -121,14 +121,14 @@ https://github.com/user-attachments/assets/8396eb50-d34f-4899-9fc5-bb18ba9ba1bf
 
 | LPC2148 Pin | 74HC573 Pin | Dot Matrix Row |
 |---|---|---|
-| P0.0 | D0 → Q0 | ROW8 |
-| P0.1 | D1 → Q1 | ROW7 |
-| P0.2 | D2 → Q2 | ROW6 |
-| P0.3 | D3 → Q3 | ROW5 |
-| P0.4 | D4 → Q4 | ROW4 |
-| P0.5 | D5 → Q5 | ROW3 |
-| P0.6 | D6 → Q6 | ROW2 |
-| P0.7 | D7 → Q7 | ROW1 |
+| P0.16 | D0 → Q0 | ROW1 |
+| P0.17 | D1 → Q1 | ROW2 |
+| P0.18 | D2 → Q2 | ROW3 |
+| P0.19 | D3 → Q3 | ROW4 |
+| P0.20 | D4 → Q4 | ROW5 |
+| P0.21 | D5 → Q5 | ROW6 |
+| P0.22 | D6 → Q6 | ROW7 |
+| P0.23 | D7 → Q7 | ROW8 |
 
 ### I2C EEPROM (AT24C256)
 
@@ -136,8 +136,6 @@ https://github.com/user-attachments/assets/8396eb50-d34f-4899-9fc5-bb18ba9ba1bf
 |---|---|
 | P0.2 | SCL |
 | P0.3 | SDA |
-
-> ⚠️ **Note:** I2C and 74HC573 share P0.2 and P0.3 — verify your board configuration before use.
 
 ### UART0 (GSM Module)
 
